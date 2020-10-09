@@ -28,7 +28,7 @@ export class AlertModalService {
   }
 
   showAlertSuccess(message: string) {
-    this.showAlert(message, AlertTypes.SUCCESS, 3000);
+    this.showAlert(message, AlertTypes.SUCCESS, 3000);//pop-up sumir
   }
 
   showConfirm(title: string, msg: string, okTxt?: string, cancelTxt?: string) {
