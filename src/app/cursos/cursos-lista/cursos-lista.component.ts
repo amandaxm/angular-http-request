@@ -5,52 +5,56 @@ import { empty, Observable, Subject } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AlertModalService } from '../../shared/alert-modal.service';
-
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cursos-lista',
   templateUrl: './cursos-lista.component.html',
-  styleUrls: ['./cursos-lista.component.scss']
+  styleUrls: ['./cursos-lista.component.scss'],
 })
 export class CursosListaComponent implements OnInit {
- 
   bsModalRef: BsModalRef;
-  cursos$: Observable<Curso[]>;//$ é um observable
+  cursos$: Observable<Curso[]>; //$ é um observable
   error$ = new Subject<boolean>();
   //subject consegue emitir valores
- 
+
   constructor(
     private service: CursosService,
-    private alertService: AlertModalService
-    ) { }
+    private alertService: AlertModalService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-   // this.service.list().subscribe(dados => this.cursos = dados);//se inscrever e ficar escutando as mudanças
- //de uma maneira mais prática
+    // this.service.list().subscribe(dados => this.cursos = dados);//se inscrever e ficar escutando as mudanças
+    //de uma maneira mais prática
     //para utilizar o async
     this.onRefresh();
   }
 
-  onRefresh(){
-    this.cursos$ = this.service.list()
-    .pipe(catchError(error => {
-      console.error(error);
-     // this.error$.next(true);
-     this.handleError();
-      return empty();
-
-
-    }));
+  onRefresh() {
+    this.cursos$ = this.service.list().pipe(
+      catchError((error) => {
+        console.error(error);
+        // this.error$.next(true);
+        this.handleError();
+        return empty();
+      })
+    );
     this.service.list().subscribe(
-      dados=>{
+      (dados) => {
         console.log(dados);
       },
-      error => console.error(error),
-      ()=>console.log('Observable completo')
+      (error) => console.error(error),
+      () => console.log('Observable completo')
     );
   }
-  handleError(){
-    this.alertService.showAlertDanger('Erro ao carregar cursos. Tente novamente mais tarde')
-     }
-
+  handleError() {
+    this.alertService.showAlertDanger(
+      'Erro ao carregar cursos. Tente novamente mais tarde'
+    );
+  }
+  onEdit(id) {//recebe curso.id para saber qual iremos editar
+    this.router.navigate(['editar',id],{relativeTo: this.route});
+  }
 }

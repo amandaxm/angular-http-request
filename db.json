@@ -21,8 +21,24 @@
       "id": 5
     },
     {
-      "nome": "Java Avançado",
-      "id": 6
+      "id": 6,
+      "nome": "Java Avançado 3"
+    },
+    {
+      "nome": "angular 3",
+      "id": 7
+    },
+    {
+      "nome": "Angular 10",
+      "id": 8
+    },
+    {
+      "nome": "Angular 9000",
+      "id": 9
+    },
+    {
+      "nome": "Angular 2",
+      "id": 10
     }
   ]
 }
