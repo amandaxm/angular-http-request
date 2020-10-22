@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CursosService } from '../cursos.service';
+import { Cursos2Service } from '../cursos2.service';
 import { Curso } from '../curso';
 import { EMPTY, Observable, Subject } from 'rxjs';
 import { catchError, switchMap, take } from 'rxjs/operators';
