@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CursosService } from '../cursos.service';
 import { Curso } from '../curso';
-import { empty, Observable, Subject } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { EMPTY, Observable, Subject } from 'rxjs';
+import { catchError, switchMap, take } from 'rxjs/operators';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AlertModalService } from '../../shared/alert-modal.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -43,7 +43,7 @@ export class CursosListaComponent implements OnInit {
         console.error(error);
         // this.error$.next(true);
         this.handleError();
-        return empty();
+        return EMPTY;
       })
     );
     this.service.list().subscribe(
@@ -63,8 +63,23 @@ export class CursosListaComponent implements OnInit {
     this.router.navigate(['editar',id],{relativeTo: this.route});
   }
   onDelete(curso){
-    this.cursoSelecionado=curso;
-    this.deleteModalRef = this.modalService.show(this.deleteModal, {class: 'modal-sm'});
+    this.cursoSelecionado = curso;
+    // this.deleteModalRef = this.modalService.show(this.deleteModal, { class: 'modal-sm' });
+
+    const result$ = this.alertService.showConfirm('Confirmacao', 'Tem certeza que deseja remover esse curso?');
+    result$.asObservable()
+    .pipe(
+      take(1),
+      switchMap(result => result ? this.service.remove(curso.id) : EMPTY)
+    )
+    .subscribe(
+      success => {
+        this.onRefresh();
+      },
+      error => {
+        this.alertService.showAlertDanger('Erro ao remover curso. Tente novamente mais tarde.');
+      }
+    );
   }
 
   onConfirmDelete() {
@@ -72,11 +87,9 @@ export class CursosListaComponent implements OnInit {
     .subscribe(
       success => {
         this.onRefresh();
-        this.deleteModalRef.hide();
       },
       error => {
         this.alertService.showAlertDanger('Erro ao remover curso. Tente novamente mais tarde.');
-        this.deleteModalRef.hide();
       }
     );
   }

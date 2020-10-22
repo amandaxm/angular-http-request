@@ -1,14 +1,6 @@
 {
   "cursos": [
     {
-      "nome": "PHP",
-      "id": 3
-    },
-    {
-      "nome": "Node JS",
-      "id": 4
-    },
-    {
       "nome": "JavaScript",
       "id": 5
     },
